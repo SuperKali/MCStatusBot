@@ -1,0 +1,4 @@
+mcstats
+discord.py
+discord
+asyncio

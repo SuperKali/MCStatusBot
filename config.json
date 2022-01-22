@@ -1,0 +1,38 @@
+{
+    "bot_token": "<YOUR TOKEN>",
+    "bot_prefix": "*",
+    "is_maintenance_status": false,
+
+    "message_title": "MCStats",
+    "message_description": "_Here you can find the status of the servers._",
+
+    "message_field": "**🌐 For more information visit the server status site:**",
+    "message_field_link": "https://status.example.com",
+
+    "message_footer": "🕐 Last update on {date} at {time}",
+
+    "message_checking_embed": "_I'm checking the status of the servers..._",
+
+    "presence_name": "with MCServers",
+
+    "server_id": 0,
+    "channel_status_id": 0,
+    "channel_message_id": 0,
+
+    "servers_to_ping": [
+        {
+            "server_name": "SottoSopra Vanilla",
+            "server_ip": "mc.sottosopravvivenza.it",
+            "port": "25565",
+            "is_bedrock": false,
+            "is_maintenance": false
+        },
+        {
+            "server_name": "NetherGames Bedrock",
+            "server_ip": "play.nethergames.org",
+            "port": "19132",
+            "is_bedrock": true,
+            "is_maintenance": false
+        }
+    ]
+}
