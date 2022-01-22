@@ -97,6 +97,18 @@ async def update_servers_status():
         await client.change_presence(status=discord.Status.idle, activity=discord.Activity(type=discord.ActivityType.playing, name="🟠 Maintenance"))
 
 
+@client.command()
+async def createstatusmsg(ctx):
+    if ctx.message.author.id == config['owner_id']:
+        embed = discord.Embed(
+            title="MCStatus Configuration.....", 
+            description=f"Now copy the id of this message and put on config.json and data.json exactly on the config.json **channel_message_id** and on data.json on **pinger_message_id**.", 
+            color=discord.Colour.blue())
+
+        await ctx.send(embed=embed)
+        await ctx.message.delete()
+
+
 scheduler = AsyncIOScheduler()
 scheduler.add_job(update_servers_status, "interval", seconds=60)
 scheduler.start()

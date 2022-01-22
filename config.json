@@ -2,6 +2,7 @@
     "bot_token": "<YOUR TOKEN>",
     "bot_prefix": "*",
     "is_maintenance_status": false,
+    "owner_id": "",
 
     "message_title": "MCStats",
     "message_description": "_Here you can find the status of the servers._",
