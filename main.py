@@ -112,7 +112,7 @@ async def help(ctx):
     embed = discord.Embed(
         title="Commands of MCStatusBot",
         description=f"{config['prefix']}createstatusmsg - allow you to create a message where will be configured the status message.",
-        color=discord.Color.dark_blue())
+        color=discord.Colour.dark_blue())
 
     embed.set_footer("Bot developed by SuperKali#8716")    
     
