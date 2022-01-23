@@ -1,5 +1,3 @@
-from logging.config import dictConfig
-from turtle import color
 import discord
 import time
 import json
