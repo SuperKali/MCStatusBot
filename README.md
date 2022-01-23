@@ -34,6 +34,7 @@
 - [ ] Add players online on the presence status
 - [ ] Bring the code on docker system.
 - [ ] Add command for show the status in real time
+- [ ] Add automatically update on startup for new version
 
 
 

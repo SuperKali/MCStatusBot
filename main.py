@@ -1,3 +1,5 @@
+from logging.config import dictConfig
+from turtle import color
 import discord
 import time
 import json
@@ -17,17 +19,17 @@ bot_token = config['bot_token']
 
 @client.event
 async def on_ready():
-    # Inizializza lo status del bot nella presence
+    # Initialize the status of the bot in the presence
     await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name=config["presence_name"]))
 
 
-    # Controlla se hai configurato l'id del server discord
+    # Check if you have configured the discord server id
     server_id = client.get_guild(config['server_id'])
     if server_id is None:
         print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The server_id set in the configuration file is invalid!")
         return 0
 
-    # Controlla se hai configurato l'id del canale dove andrà a scrivere lo status
+    # Check if you have configured the channel id where it will write the status
     check_channel_status = server_id.get_channel(config['channel_status_id'])
     if check_channel_status is None:
         print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The channel_status_id set in the configuration file is invalid!")
@@ -46,7 +48,6 @@ async def update_servers_status():
 
                 txt = discord.Embed(title=config['message_title'], description=f"{config['message_description']}\n", colour=discord.Colour.orange())
 
-                
                 with open('data.json') as data_file:
                     data = json.load(data_file)
 
@@ -107,6 +108,17 @@ async def createstatusmsg(ctx):
 
         await ctx.send(embed=embed)
         await ctx.message.delete()
+
+@client.command()
+async def help(ctx):
+    embed = discord.Embed(
+        title="Commands of MCStatusBot",
+        description=f"{config['prefix']}createstatusmsg - allow you to create a message where will be configured the status message.",
+        color=discord.Color.dark_blue())
+
+    embed.set_footer("Bot developed by SuperKali#8716")    
+    
+    await ctx.send(embed=embed)
 
 
 scheduler = AsyncIOScheduler()
