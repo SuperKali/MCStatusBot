@@ -1,7 +1,6 @@
 import discord
 import time
 import json
-import requests
 
 from discord.ext import commands
 from mcstatus import MinecraftServer, MinecraftBedrockServer
