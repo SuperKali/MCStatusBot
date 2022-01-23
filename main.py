@@ -5,7 +5,7 @@ import requests
 
 from discord.ext import commands
 from mcstatus import MinecraftServer, MinecraftBedrockServer
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from asyncio import AsyncIOScheduler
 
 with open('config.json') as config_file:
     config = json.load(config_file)

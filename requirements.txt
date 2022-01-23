@@ -1,4 +1,3 @@
-mcstats
-discord.py
+mcstatus
 discord
 asyncio
