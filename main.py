@@ -38,6 +38,7 @@ async def on_ready():
     check_channel_status = server_id.get_channel(config['channel_status_id'])
     if check_channel_status is None:
         print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The channel_status_id set in the configuration file is invalid!")
+        return 0
 
     # Check if the bot have an outdated version and then it will automatically update it - Not complete yet
     with open("version.json") as version_config:
@@ -45,7 +46,7 @@ async def on_ready():
 
         await checking_bot_updates(version["checking-url"], version["current-version"])
 
-    print("MCStatusBot: is running now on: ")
+    print("MCStatusBot: is running now on:")
     for servers in client.guilds:  
         print(f"{servers}")
 
