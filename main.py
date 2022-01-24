@@ -1,6 +1,8 @@
+from marshal import load
 import discord
 import time
 import json
+import requests
 
 from discord.ext import commands
 from mcstatus import MinecraftServer, MinecraftBedrockServer
@@ -26,14 +28,26 @@ async def on_ready():
         print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The server_id set in the configuration file is invalid!")
         return 0
 
+    # Check if you have configured the owner id of this bot
+    owner_id = client.get_user(config['owner_id'])
+    if owner_id is None:
+        print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The owner_id set in the configuration file is invalid!")
+        return 0    
+
     # Check if you have configured the channel id where it will write the status
     check_channel_status = server_id.get_channel(config['channel_status_id'])
     if check_channel_status is None:
         print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The channel_status_id set in the configuration file is invalid!")
 
-    print("MCStats Bot: is running now on:")
+    # Check if the bot have an outdated version and then it will automatically update it - Not complete yet
+    with open("version.json") as version_config:
+        version = json.load(version_config)
+
+        await checking_bot_updates(version["checking-url"], version["current-version"])
+
+    print("MCStatusBot: is running now on: ")
     for servers in client.guilds:  
-        print(servers)
+        print(f"{servers}")
 
 
 async def update_servers_status():
@@ -116,6 +130,20 @@ async def help(ctx):
     embed.set_footer("Bot developed by SuperKali#8716")    
     
     await ctx.send(embed=embed)
+
+
+async def checking_bot_updates(url: str, version: float):
+    checking_url = requests.get(url)
+
+    if checking_url.status_code == 200:
+        checking_version = checking_url.json()
+        if version != checking_version["version"]:
+            print(f"MCStatusBot: It's available a new version {str(checking_version['version'])}v, your current version is {str(version)}v.")
+            # TODO
+        else:
+            print("MCStatusBot: All systems is updated at the latest version.")
+    else:
+        print("MCStatusBot: i got a problem to retrieve the version.json file on the repository, check your connection or if it persist, open a issue on GitHub.")           
 
 
 scheduler = AsyncIOScheduler()

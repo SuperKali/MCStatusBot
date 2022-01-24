@@ -1,0 +1,6 @@
+{
+    "name": "MCStatusBot",
+    "default": "main",
+    "current-version": 1.0,
+    "checking-url": "https://raw.githubusercontent.com/SuperKali/MCStatusBot/main/version.json"
+}
