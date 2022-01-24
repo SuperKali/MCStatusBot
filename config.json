@@ -1,10 +1,10 @@
 {
-    "bot_token": "Nzk0Njg4ODM5Njc1MTUwMzQ2.X--dpw.XeGS61K6TB48ILtNbpbswOCAGyQ",
+    "bot_token": "",
     "bot_prefix": "*",
     "is_maintenance_status": false,
-    "owner_id": 325875721098756097,
+    "owner_id": 0,
 
-    "message_title": "MCStats",
+    "message_title": "MCStatusBot",
     "message_description": "_Here you can find the status of the servers._",
 
     "message_field": "**🌐 For more information visit the server status site:**",
@@ -16,9 +16,9 @@
 
     "presence_name": "with MCServers",
 
-    "server_id": 795073852862496808,
-    "channel_status_id": 795073853176545339,
-    "channel_message_id": 847911006272487504,
+    "server_id": 0,
+    "channel_status_id": 0,
+    "channel_message_id": 0,
 
     "servers_to_ping": [
         {
