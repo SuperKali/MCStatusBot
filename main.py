@@ -1,4 +1,3 @@
-from marshal import load
 import discord
 import time
 import json
