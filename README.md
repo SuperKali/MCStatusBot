@@ -31,7 +31,7 @@
 ![Image](https://cdn.superkali.me/118279684777896/botstatsconfig.png)
 
 # TO-DO LIST
-- [ ] Add players online on the presence status
+- [x] Add players online on the presence status
 - [ ] Bring the code on docker system.
 - [ ] Add command for show the status in real time
 - [ ] Add automatically update on startup for new version

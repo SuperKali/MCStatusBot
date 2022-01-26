@@ -13,11 +13,12 @@ client = commands.Bot(command_prefix=config["bot_prefix"], help_command=None, in
 
 bot_token = config['bot_token']
 
+count_all_servers = {}
 
 @client.event
 async def on_ready():
     # Initialize the status of the bot in the presence
-    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name=config["presence_name"]))
+    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name="...loading"))
 
 
     # Check if you have configured the discord server id
@@ -70,11 +71,14 @@ async def update_servers_status():
                             if servers["is_bedrock"]:
                                 check = MinecraftBedrockServer.lookup(f"{servers['server_ip']}:{servers['port']}").status().players_online
                                 txt.add_field(name=servers['server_name'], value=f"🟢 ONLINE ({check} players)", inline=False)
+                                count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"]}
                             else:
                                 check = MinecraftServer.lookup(f"{servers['server_ip']}:{servers['port']}").status().players.online
-                                txt.add_field(name=servers['server_name'], value=f"🟢 ONLINE ({check} players)", inline=False)                  
+                                txt.add_field(name=servers['server_name'], value=f"🟢 ONLINE ({check} players)", inline=False)  
+                                count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"]}
                         except:
                             txt.add_field(name=servers['server_name'], value=f"🔴 OFFLINE", inline=False)
+                            count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"]}
                     else:
                         txt.add_field(name=servers['server_name'], value=f"🟠 MAINTENANCE", inline=False)
 
@@ -93,6 +97,16 @@ async def update_servers_status():
             return 0
     else:            
         await client.change_presence(status=discord.Status.idle, activity=discord.Activity(type=discord.ActivityType.playing, name="🟠 Maintenance"))
+
+async def update_presence_status():
+    servers = count_all_servers.values()
+    status = []
+    for value in servers:
+        if value.get("count_on_presence", False):
+            status.append(int(value.get('online', 0)))
+
+    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name=config["presence_name"].format(players=sum(status))))
+    count_all_servers.clear()
 
 
 @client.command()
@@ -118,8 +132,11 @@ async def help(ctx):
     await ctx.send(embed=embed)
 
 
+
+
 scheduler = AsyncIOScheduler()
-scheduler.add_job(update_servers_status, "interval", seconds=60)
+scheduler.add_job(update_servers_status, "interval", seconds=30)
+scheduler.add_job(update_presence_status, "interval", seconds=30)
 scheduler.start()
 
 

@@ -1,10 +1,10 @@
 {
-    "bot_token": "<YOUR TOKEN>",
+    "bot_token": "<PUT YOUR TOKEN>",
     "bot_prefix": "*",
     "is_maintenance_status": false,
     "owner_id": "",
 
-    "message_title": "MCStats",
+    "message_title": "MCStatus",
     "message_description": "_Here you can find the status of the servers._",
 
     "message_field": "**🌐 For more information visit the server status site:**",
@@ -14,7 +14,7 @@
 
     "message_checking_embed": "_I'm checking the status of the servers..._",
 
-    "presence_name": "with MCServers",
+    "presence_name": "{players} online",
 
     "server_id": 0,
     "channel_status_id": 0,
@@ -26,6 +26,7 @@
             "server_ip": "mc.sottosopravvivenza.it",
             "port": "25565",
             "is_bedrock": false,
+            "count_on_presence": true,
             "is_maintenance": false
         },
         {
@@ -33,6 +34,7 @@
             "server_ip": "play.nethergames.org",
             "port": "19132",
             "is_bedrock": true,
+            "count_on_presence": false,
             "is_maintenance": false
         }
     ]
