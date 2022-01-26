@@ -135,8 +135,8 @@ async def help(ctx):
 
 
 scheduler = AsyncIOScheduler()
-scheduler.add_job(update_servers_status, "interval", seconds=30)
-scheduler.add_job(update_presence_status, "interval", seconds=30)
+scheduler.add_job(update_servers_status, "interval", seconds=60)
+scheduler.add_job(update_presence_status, "interval", seconds=60)
 scheduler.start()
 
 
