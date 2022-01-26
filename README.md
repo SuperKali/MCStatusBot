@@ -28,7 +28,8 @@
 ### 2. Edit the data.json
 * With the id before copied and pasted on **channel_message_id**, you need also to edit the line **pinger_message_id** with this id.
 
-![Image](https://cdn.superkali.me/118279684777896/botstatsconfig.png)
+![Image](https://cdn.superkali.me/118279684777896/botstatsconfiguration.png)
+
 
 # TO-DO LIST
 - [x] Add players online on the presence status
