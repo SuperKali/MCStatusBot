@@ -89,6 +89,7 @@ async def update_servers_status():
                 txt.set_footer(text=config["message_footer"].format(date=time.strftime('%d/%m/%y'), time=time.strftime('%H:%M:%S')))
 
                 await pinger_message.edit(embed=txt)
+                await update_presence_status() 
             else:
                 print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] I could not find the servers status channel")
                 return 0
@@ -107,7 +108,6 @@ async def update_presence_status():
 
     await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name=config["presence_name"].format(players=sum(status))))
     count_all_servers.clear()
-
 
 @client.command()
 async def createstatusmsg(ctx):
@@ -136,7 +136,6 @@ async def help(ctx):
 
 scheduler = AsyncIOScheduler()
 scheduler.add_job(update_servers_status, "interval", seconds=60)
-scheduler.add_job(update_presence_status, "interval", seconds=65)
 scheduler.start()
 
 
