@@ -78,7 +78,7 @@ async def update_servers_status():
                                 count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"]}
                         except:
                             txt.add_field(name=servers['server_name'], value=f"🔴 OFFLINE", inline=False)
-                            count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"]}
+                            count_all_servers[servers['server_name']] = {"online": 0, "count_on_presence": servers["count_on_presence"]}
                     else:
                         txt.add_field(name=servers['server_name'], value=f"🟠 MAINTENANCE", inline=False)
 
