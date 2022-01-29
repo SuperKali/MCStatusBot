@@ -1,6 +1,7 @@
 import discord
 import time
 import json
+import os
 
 from discord.ext import commands
 from mcstatus import MinecraftServer, MinecraftBedrockServer
@@ -32,7 +33,19 @@ async def on_ready():
     if check_channel_status is None:
         print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The channel_status_id set in the configuration file is invalid!")
 
-    print("MCStats Bot: is running now on:")
+
+    # Check if you have configured the owner id
+    owner_id = client.get_user(config['owner_id'])
+    if owner_id is None:
+        print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The owner_id set in the configuration file is invalid!")
+
+    # Enable all cogs to the bot
+    for i in os.listdir('./cogs'):
+        if i.endswith('.py'):
+            client.load_extension(f'cogs.{i[:-3]}')
+            print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] {i} loaded")
+
+    print("MCStatusBot: is running now on:")
     for servers in client.guilds:  
         print(servers)
 
@@ -58,12 +71,8 @@ async def update_servers_status():
                     await pinger_message.edit(embed=checking)
 
                 except discord.errors.NotFound:
-                    checking = discord.Embed(description=config["message_checking_embed"], colour=discord.Colour.orange())
-                    pinger_message = await channel_message.send(embed=checking)
-                    data['pinger_message_id'] = pinger_message.id
-                    new_data_file = open("data.json", "w")
-                    json.dump(data, new_data_file)
-                    new_data_file.close()
+                    return print(f"MCStatusBot: The bot is not configured yet.. missing the command {config['bot_prefix']}createstatusmsg on the text channel")
+                    
 
                 for servers in data_list["servers_to_ping"]:
                     if servers["is_maintenance"] == False:
@@ -108,31 +117,6 @@ async def update_presence_status():
 
     await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name=config["presence_name"].format(players=sum(status))))
     count_all_servers.clear()
-
-@client.command()
-async def createstatusmsg(ctx):
-    if ctx.message.author.id == config['owner_id']:
-        embed = discord.Embed(
-            title="MCStatus Configuration.....", 
-            description=f"Now copy the id of this message and put on config.json and data.json exactly on the config.json **channel_message_id** and on data.json on **pinger_message_id**.", 
-            color=discord.Colour.blue())
-
-        await ctx.send(embed=embed)
-        await ctx.message.delete()
-
-@client.command()
-async def help(ctx):
-    embed = discord.Embed(
-        title="Commands of MCStatusBot",
-        description=f"{config['bot_prefix']}createstatusmsg - allow you to create a message where will be configured the status message.",
-        color=discord.Colour.dark_blue())
-
-    embed.set_footer("Bot developed by SuperKali#8716")    
-    
-    await ctx.send(embed=embed)
-
-
-
 
 scheduler = AsyncIOScheduler()
 scheduler.add_job(update_servers_status, "interval", seconds=60)
