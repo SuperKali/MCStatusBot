@@ -1,5 +1,5 @@
-<h1 align="center">MCStatsBot</h1>
-<h4 align="center">MCStatsBot allows you to monitor the status and amount of online players of your Minecraft Java and Bedrock server on your Discord Server.</h3>
+<h1 align="center">MCStatusBot</h1>
+<h4 align="center">MCStatusBot allows you to monitor the status and amount of online players of your Minecraft Java and Bedrock server on your Discord Server.</h3>
 
 <p align="center">
     <a href="https://discord.superkali.me" alt="Discord">
