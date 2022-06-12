@@ -4,7 +4,7 @@ import json
 import os
 
 from discord.ext import commands
-from mcstatus import MinecraftServer, MinecraftBedrockServer
+from mcstatus import JavaServer, BedrockServer
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 with open('config.json') as config_file:
@@ -78,11 +78,11 @@ async def update_servers_status():
                     if servers["is_maintenance"] == False:
                         try:
                             if servers["is_bedrock"]:
-                                check = MinecraftBedrockServer.lookup(f"{servers['server_ip']}:{servers['port']}").status().players_online
+                                check = BedrockServer.lookup(f"{servers['server_ip']}:{servers['port']}").status().players_online
                                 txt.add_field(name=servers['server_name'], value=f"🟢 ONLINE ({check} players)", inline=False)
                                 count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"]}
                             else:
-                                check = MinecraftServer.lookup(f"{servers['server_ip']}:{servers['port']}").status().players.online
+                                check = JavaServer.lookup(f"{servers['server_ip']}:{servers['port']}").status().players.online
                                 txt.add_field(name=servers['server_name'], value=f"🟢 ONLINE ({check} players)", inline=False)  
                                 count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"]}
                         except:
