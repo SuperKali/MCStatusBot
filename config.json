@@ -19,6 +19,8 @@
     "server_id": 0,
     "channel_status_id": 0,
 
+    "refresh_time": 60,
+
     "servers_to_ping": [
         {
             "server_name": "SottoSopra Vanilla",

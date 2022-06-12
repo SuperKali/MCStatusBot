@@ -2,3 +2,4 @@ mcstatus
 discord
 asyncio
 apscheduler
+colorama

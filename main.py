@@ -5,6 +5,7 @@ import os
 
 from discord.ext import commands
 from mcstatus import JavaServer, BedrockServer
+from colorama import init, Fore, Style, Back
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 with open('config.json') as config_file:
@@ -16,8 +17,13 @@ bot_token = config['bot_token']
 
 count_all_servers = {}
 
+
 @client.event
 async def on_ready():
+
+    # initializing terminal text color
+    init(autoreset=True)
+
     # Initialize the status of the bot in the presence
     await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name="...loading"))
 
@@ -39,15 +45,23 @@ async def on_ready():
     if owner_id is None:
         print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The owner_id set in the configuration file is invalid!")
 
+    global enabled_cogs
     # Enable all cogs to the bot
     for i in os.listdir('./cogs'):
         if i.endswith('.py'):
             client.load_extension(f'cogs.{i[:-3]}')
-            print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] {i} loaded")
+            enabled_cogs = i
 
-    print("MCStatusBot: is running now on:")
-    for servers in client.guilds:  
-        print(servers)
+
+    print(Style.NORMAL + Fore.LIGHTMAGENTA_EX + "╔═══════════════════╗")
+    print(Style.NORMAL + Fore.GREEN + "Name: " + Fore.RESET + Fore.RED + "MCStatusBot")
+    print(Style.NORMAL + Fore.GREEN + "Version: " + Fore.RESET + Fore.RED + "v1.0")
+    print(Style.NORMAL + Fore.GREEN + "Refresh Time: " + Fore.RESET + Fore.RED + str(config["refresh_time"]) + " seconds")
+    print(Style.NORMAL + Fore.GREEN + "Bot Status: " + Fore.RESET + Fore.RED + "Online")
+    print(Style.NORMAL + Fore.GREEN + "Enabled Cogs: " + Fore.RESET + Fore.RED + str(enabled_cogs.replace('.py', '')))
+    print(Style.NORMAL + Fore.GREEN + "Support: " + Fore.RESET + Fore.RED + "https://discord.superkali.me")
+    print(Style.NORMAL + Fore.LIGHTMAGENTA_EX + "╚═══════════════════╝")
+
 
 
 async def update_servers_status():
@@ -71,7 +85,7 @@ async def update_servers_status():
                     await pinger_message.edit(embed=checking)
 
                 except discord.errors.NotFound:
-                    return print(f"MCStatusBot: The bot is not configured yet.. missing the command {config['bot_prefix']}createstatusmsg on the text channel")
+                    return print(Style.NORMAL + Fore.RED + "[MCStatusBot] " + Fore.RESET + Fore.CYAN + f"The bot is not configured yet.. missing the command {config['bot_prefix']}createstatusmsg on the text channel")
                     
 
                 for servers in data_list["servers_to_ping"]:
@@ -80,14 +94,14 @@ async def update_servers_status():
                             if servers["is_bedrock"]:
                                 check = BedrockServer.lookup(f"{servers['server_ip']}:{servers['port']}").status().players_online
                                 txt.add_field(name=servers['server_name'], value=f"🟢 ONLINE ({check} players)", inline=False)
-                                count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"]}
+                                count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"], "status": True}
                             else:
                                 check = JavaServer.lookup(f"{servers['server_ip']}:{servers['port']}").status().players.online
                                 txt.add_field(name=servers['server_name'], value=f"🟢 ONLINE ({check} players)", inline=False)  
-                                count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"]}
+                                count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"], "status": True}
                         except:
                             txt.add_field(name=servers['server_name'], value=f"🔴 OFFLINE", inline=False)
-                            count_all_servers[servers['server_name']] = {"online": 0, "count_on_presence": servers["count_on_presence"]}
+                            count_all_servers[servers['server_name']] = {"online": 0, "count_on_presence": servers["count_on_presence"], "status": False}
                     else:
                         txt.add_field(name=servers['server_name'], value=f"🟠 MAINTENANCE", inline=False)
 
@@ -98,7 +112,9 @@ async def update_servers_status():
                 txt.set_footer(text=config["message_footer"].format(date=time.strftime('%d/%m/%y'), time=time.strftime('%H:%M:%S')))
 
                 await pinger_message.edit(embed=txt)
-                await update_presence_status() 
+                await send_console_status()
+                await update_presence_status()
+
             else:
                 print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] I could not find the servers status channel")
                 return 0
@@ -118,8 +134,18 @@ async def update_presence_status():
     await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name=config["presence_name"].format(players=sum(status))))
     count_all_servers.clear()
 
+async def send_console_status():
+    servers = count_all_servers.values()
+    status = []
+    for value in servers:
+        status.append(int(value.get("status")))
+            
+    print(Style.NORMAL + Fore.RED + "[MCStatusBot] " + Fore.RESET + Fore.CYAN + f"Current Status of Servers:")
+    print(Style.NORMAL + Fore.RED + "[MCStatusBot] " + Fore.RESET + Fore.CYAN + f"{status.count(True)} Online servers")
+    print(Style.NORMAL + Fore.RED + "[MCStatusBot] " + Fore.RESET + Fore.CYAN + f"{status.count(False)} Offline servers")
+
 scheduler = AsyncIOScheduler()
-scheduler.add_job(update_servers_status, "interval", seconds=60)
+scheduler.add_job(update_servers_status, "interval", seconds=config["refresh_time"])
 scheduler.start()
 
 
