@@ -93,17 +93,17 @@ async def update_servers_status():
                         try:
                             if servers["is_bedrock"]:
                                 check = BedrockServer.lookup(f"{servers['server_ip']}:{servers['port']}").status().players_online
-                                txt.add_field(name=servers['server_name'], value=f"🟢 ONLINE ({check} players)", inline=False)
+                                txt.add_field(name=servers['server_name'], value=config["message_online_server"].format(online_players=check), inline=False)
                                 count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"], "status": True}
                             else:
                                 check = JavaServer.lookup(f"{servers['server_ip']}:{servers['port']}").status().players.online
-                                txt.add_field(name=servers['server_name'], value=f"🟢 ONLINE ({check} players)", inline=False)  
+                                txt.add_field(name=servers['server_name'], value=config["message_online_server"].format(online_players=check), inline=False)  
                                 count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"], "status": True}
                         except:
-                            txt.add_field(name=servers['server_name'], value=f"🔴 OFFLINE", inline=False)
+                            txt.add_field(name=servers['server_name'], value=config["message_offline_server"], inline=False)
                             count_all_servers[servers['server_name']] = {"online": 0, "count_on_presence": servers["count_on_presence"], "status": False}
                     else:
-                        txt.add_field(name=servers['server_name'], value=f"🟠 MAINTENANCE", inline=False)
+                        txt.add_field(name=servers['server_name'], value=config["message_maintenance_server"], inline=False)
 
                 server_list.close()
 

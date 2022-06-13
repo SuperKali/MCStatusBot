@@ -16,6 +16,10 @@
 
     "presence_name": "{players} online",
 
+    "message_online_server": "🟢 ONLINE ({online_players} players)",
+    "message_offline_server": "🔴 OFFLINE",
+    "message_maintenance_server": "🟠 MAINTENANCE",
+
     "server_id": 0,
     "channel_status_id": 0,
 
