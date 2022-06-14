@@ -1,4 +1,3 @@
-from asyncio_dgram import connect
 import discord
 import json
 from discord.ext import commands
