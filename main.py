@@ -1,9 +1,10 @@
-import discord
+import asyncio
+import nextcord
 import time
 import json
 import os
 
-from discord.ext import commands
+from nextcord.ext import commands
 from mcstatus import JavaServer, BedrockServer
 from colorama import init, Fore, Style, Back
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -11,12 +12,11 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 with open('config.json') as config_file:
     config = json.load(config_file)
 
-client = commands.Bot(command_prefix=config["bot_prefix"], help_command=None, intents=discord.Intents.all())
+client = commands.Bot(command_prefix=config["bot_prefix"], help_command=None, intents=nextcord.Intents.all())
 
 bot_token = config['bot_token']
 
 count_all_servers = {}
-
 
 @client.event
 async def on_ready():
@@ -25,7 +25,7 @@ async def on_ready():
     init(autoreset=True)
 
     # Initialize the status of the bot in the presence
-    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name="...loading"))
+    await client.change_presence(status=nextcord.Status.online, activity=nextcord.Activity(type=nextcord.ActivityType.playing, name="...loading"))
 
 
     # Check if you have configured the discord server id
@@ -46,7 +46,7 @@ async def on_ready():
         print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The owner_id set in the configuration file is invalid!")
 
     global enabled_cogs
-    # Enable all cogs to the bot
+    # Search all cogs
     for i in os.listdir('./cogs'):
         if i.endswith('.py'):
             client.load_extension(f'cogs.{i[:-3]}')
@@ -71,7 +71,7 @@ async def update_servers_status():
             channel_message = server_id.get_channel(config['channel_status_id'])
             if channel_message is not None:
 
-                txt = discord.Embed(title=config['message_title'], description=f"{config['message_description']}\n", colour=discord.Colour.orange())
+                txt = nextcord.Embed(title=config['message_title'], description=f"{config['message_description']}\n", colour=nextcord.Colour.orange())
 
                 with open('data.json') as data_file:
                     data = json.load(data_file)
@@ -81,10 +81,10 @@ async def update_servers_status():
                 try:
 
                     pinger_message = await channel_message.fetch_message(int(data['pinger_message_id']))
-                    checking = discord.Embed(description=config["message_checking_embed"], colour=discord.Colour.orange())
+                    checking = nextcord.Embed(description=config["message_checking_embed"], colour=nextcord.Colour.orange())
                     await pinger_message.edit(embed=checking)
 
-                except discord.errors.NotFound:
+                except nextcord.errors.NotFound:
                     return print(Style.NORMAL + Fore.RED + "[MCStatusBot] " + Fore.RESET + Fore.CYAN + f"The bot is not configured yet.. missing the command {config['bot_prefix']}createstatusmsg on the text channel")
                     
 
@@ -122,7 +122,7 @@ async def update_servers_status():
             print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] I could not find the indicated discord server.")
             return 0
     else:            
-        await client.change_presence(status=discord.Status.idle, activity=discord.Activity(type=discord.ActivityType.playing, name="🟠 Maintenance"))
+        await client.change_presence(status=nextcord.Status.idle, activity=nextcord.Activity(type=nextcord.ActivityType.playing, name="🟠 Maintenance"))
 
 async def update_presence_status():
     servers = count_all_servers.values()
@@ -131,7 +131,7 @@ async def update_presence_status():
         if value.get("count_on_presence", False):
             status.append(int(value.get('online', 0)))
 
-    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name=config["presence_name"].format(players=sum(status))))
+    await client.change_presence(status=nextcord.Status.online, activity=nextcord.Activity(type=nextcord.ActivityType.playing, name=config["presence_name"].format(players=sum(status))))
     count_all_servers.clear()
 
 async def send_console_status():

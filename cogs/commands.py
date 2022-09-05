@@ -1,6 +1,6 @@
-import discord
+import nextcord
 import json
-from discord.ext import commands
+from nextcord.ext import commands
 
 class Commands(commands.Cog):
     def __init__(self, client):
@@ -16,10 +16,10 @@ class Commands(commands.Cog):
             with open('data.json') as data:
                 self.data = json.load(data)
 
-            embed = discord.Embed(
+            embed = nextcord.Embed(
                 title="MCStatusBot Configured 🎉", 
                 description=f"This message will be updated with the status message automatically.", 
-                color=discord.Colour.blue())
+                color=nextcord.Colour.blue())
 
             message = await ctx.send(embed=embed)
             await ctx.message.delete()
@@ -34,14 +34,14 @@ class Commands(commands.Cog):
 
     @commands.command()
     async def help(self, ctx):
-        embed = discord.Embed(
+        embed = nextcord.Embed(
             title="Commands of MCStatusBot",
             description=f"{self.config['bot_prefix']}createstatusmsg - allow you to create a message where will be configured the status message.",
-            color=discord.Colour.dark_blue())
+            color=nextcord.Colour.dark_blue())
 
         embed.set_footer(text="Bot developed by SuperKali#8716")    
         
         await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Commands(client))
+async def setup(client):
+   client.add_cog(Commands(client))

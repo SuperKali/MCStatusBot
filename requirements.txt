@@ -1,5 +1,5 @@
 mcstatus
-discord
+nextcord
 asyncio
 apscheduler
 colorama
