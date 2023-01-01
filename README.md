@@ -9,11 +9,11 @@
 </p>
 
 
-![Image](https://cdn.superkali.me/118279684777896/botstats.png)
+![Image](https://cdn.superkali.me/118279684777895/botstats.png)
 
 <h1 align="center">How it works?</h1>
 
-![Image](https://cdn.superkali.me/118279684777896/botstats.gif)
+![Image](https://cdn.superkali.me/118279684777895/botstats.gif)
 
 <h1 align="center">How install this Discord Bot</h1>
 
@@ -25,7 +25,7 @@
 5. Create a text channel and copy the id of this channel and edit the line **channel_status_id**
 6. With the command ```*createstatusmsg``` on the text channel will be created a message, it will be automatically updated after one minute with the status message.
 
-![Image](https://cdn.superkali.me/118279684777896/new-config-v1.0.png)
+![Image](https://cdn.superkali.me/118279684777895/new-config-v1.0.png)
 
 
 # TO-DO LIST
