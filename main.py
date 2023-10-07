@@ -55,7 +55,7 @@ async def on_ready():
 
     print(Style.NORMAL + Fore.LIGHTMAGENTA_EX + "╔═══════════════════╗")
     print(Style.NORMAL + Fore.GREEN + "Name: " + Fore.RESET + Fore.RED + "MCStatusBot")
-    print(Style.NORMAL + Fore.GREEN + "Version: " + Fore.RESET + Fore.RED + "v1.0")
+    print(Style.NORMAL + Fore.GREEN + "Version: " + Fore.RESET + Fore.RED + "v1.2")
     print(Style.NORMAL + Fore.GREEN + "Refresh Time: " + Fore.RESET + Fore.RED + str(config["refresh_time"]) + " seconds")
     print(Style.NORMAL + Fore.GREEN + "Bot Status: " + Fore.RESET + Fore.RED + "Online")
     print(Style.NORMAL + Fore.GREEN + "Enabled Cogs: " + Fore.RESET + Fore.RED + str(enabled_cogs.replace('.py', '')))
@@ -92,7 +92,7 @@ async def update_servers_status():
                     if servers["is_maintenance"] == False:
                         try:
                             if servers["is_bedrock"]:
-                                check = BedrockServer.lookup(f"{servers['server_ip']}:{servers['port']}").status().players_online
+                                check = BedrockServer.lookup(f"{servers['server_ip']}:{servers['port']}").status().players.online
                                 txt.add_field(name=servers['server_name'], value=f"🟢 ONLINE ({check} players)", inline=False)
                                 count_all_servers[servers['server_name']] = {"online": check, "count_on_presence": servers["count_on_presence"], "status": True}
                             else:
@@ -107,7 +107,8 @@ async def update_servers_status():
 
                 server_list.close()
 
-                txt.add_field(name=config["message_field"], value=config["message_field_link"], inline=False)
+                if config["message_field"] and config["message_field_link"] is not None:
+                    txt.add_field(name=config["message_field"], value=config["message_field_link"], inline=False)
 
                 txt.set_footer(text=config["message_footer"].format(date=time.strftime('%d/%m/%y'), time=time.strftime('%H:%M:%S')))
 
