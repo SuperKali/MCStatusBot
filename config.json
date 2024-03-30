@@ -1,14 +1,14 @@
 {
-    "bot_token": "<PUT YOUR TOKEN>",
-    "bot_prefix": "*",
+    "bot_token": "MTIyMzc0NzIwODEyMjMzOTQ3MQ.Gk2ddm.SEuDMjpTiGZlY6I7Sa2ySx_peFmOh3iXBKF8IM",
+    "bot_prefix": "!",
     "is_maintenance_status": false,
-    "owner_id": "",
+    "owner_id": "758177692482535449",
 
-    "message_title": "MCStatusBot",
+    "message_title": "BlazeMCstatus",
     "message_description": "_Here you can find the status of the servers._",
 
-    "message_field": "**🌐 For more information visit the server status site:**",
-    "message_field_link": "https://status.example.com",
+    "message_field": "**🌐 Subscribe to our channel **",
+    "message_field_link": "https://www.youtube.com/channel/UCcV5e9Nhbq_gSAXCBQ1Rw-Q",
 
     "message_footer": "🕐 Last update on {date} at {time}",
 
@@ -16,24 +16,24 @@
 
     "presence_name": "{players} online",
 
-    "server_id": 0,
-    "channel_status_id": 0,
+    "server_id": 1214612822076559402,
+    "channel_status_id": 1223765236616659124,
 
     "refresh_time": 60,
 
     "servers_to_ping": [
         {
-            "server_name": "SottoSopra Vanilla",
-            "server_ip": "mc.sottosopravvivenza.it",
-            "port": "25565",
+            "server_name": "BlazeHeart",
+            "server_ip": "blazeheart.mine.bz:29291",
+            "port": "29291",
             "is_bedrock": false,
             "count_on_presence": true,
             "is_maintenance": false
         },
         {
-            "server_name": "NetherGames Bedrock",
-            "server_ip": "play.nethergames.org",
-            "port": "19132",
+            "server_name": "BlazeHeart",
+            "server_ip": "blazeheart.mine.bz:29291",
+            "port": "29291",
             "is_bedrock": true,
             "count_on_presence": false,
             "is_maintenance": false
