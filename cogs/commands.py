@@ -29,7 +29,7 @@ class Commands(commands.Cog):
             json.dump(self.data, data_save)
             data_save.close() 
         else:
-            ctx.send("MCStatusBot: You don't have the permission for use this command, only the owner can do this command.")   
+           await ctx.send("MCStatusBot: You don't have the permission for use this command, only the owner can do this command.")   
 
 
     @commands.command()

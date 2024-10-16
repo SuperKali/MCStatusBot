@@ -29,19 +29,19 @@ async def on_ready():
 
 
     # Check if you have configured the discord server id
-    server_id = client.get_guild(config['server_id'])
+    server_id = client.get_guild(int(config['server_id']))
     if server_id is None:
         print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The server_id set in the configuration file is invalid!")
         return 0
 
     # Check if you have configured the channel id where it will write the status
-    check_channel_status = server_id.get_channel(config['channel_status_id'])
+    check_channel_status = server_id.get_channel(int(config['channel_status_id']))
     if check_channel_status is None:
         print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The channel_status_id set in the configuration file is invalid!")
 
 
     # Check if you have configured the owner id
-    owner_id = client.get_user(config['owner_id'])
+    owner_id = client.get_user(int(config['owner_id']))
     if owner_id is None:
         print(f"[{time.strftime('%d/%m/%y %H:%M:%S')}] ERROR: The owner_id set in the configuration file is invalid!")
 
@@ -55,7 +55,7 @@ async def on_ready():
 
     print(Style.NORMAL + Fore.LIGHTMAGENTA_EX + "╔═══════════════════╗")
     print(Style.NORMAL + Fore.GREEN + "Name: " + Fore.RESET + Fore.RED + "MCStatusBot")
-    print(Style.NORMAL + Fore.GREEN + "Version: " + Fore.RESET + Fore.RED + "v1.2")
+    print(Style.NORMAL + Fore.GREEN + "Version: " + Fore.RESET + Fore.RED + "v1.3")
     print(Style.NORMAL + Fore.GREEN + "Refresh Time: " + Fore.RESET + Fore.RED + str(config["refresh_time"]) + " seconds")
     print(Style.NORMAL + Fore.GREEN + "Bot Status: " + Fore.RESET + Fore.RED + "Online")
     print(Style.NORMAL + Fore.GREEN + "Enabled Cogs: " + Fore.RESET + Fore.RED + str(enabled_cogs.replace('.py', '')))
