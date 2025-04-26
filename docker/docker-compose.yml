@@ -1,0 +1,13 @@
+services:
+  mcstatusbot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: mcstatusbot
+    restart: unless-stopped
+    volumes:
+      - ../config.json:/app/config.json
+      - ../data.json:/app/data.json
+      - ../logs:/app/logs
+    environment:
+      - TZ=Europe/Rome

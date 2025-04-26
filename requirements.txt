@@ -3,3 +3,4 @@ nextcord
 asyncio
 apscheduler
 colorama
+requests

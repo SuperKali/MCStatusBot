@@ -3,6 +3,7 @@
     "bot_prefix": "*",
     "is_maintenance_status": false,
     "owner_id": "",
+    "auto_update": false,
 
     "message_title": "MCStatusBot",
     "message_description": "_Here you can find the status of the servers._",

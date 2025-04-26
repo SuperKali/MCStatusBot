@@ -3,6 +3,10 @@ import nextcord
 import time
 import json
 import os
+import sys
+import requests
+
+sys.path.append(os.path.join(os.path.dirname(__file__), 'utils'))
 
 from nextcord.ext import commands
 from mcstatus import JavaServer, BedrockServer
@@ -11,6 +15,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 with open('config.json') as config_file:
     config = json.load(config_file)
+    
+if "auto_update" not in config:
+    config["auto_update"] = False
 
 client = commands.Bot(command_prefix=config["bot_prefix"], help_command=None, intents=nextcord.Intents.all())
 
@@ -52,16 +59,59 @@ async def on_ready():
             client.load_extension(f'cogs.{i[:-3]}')
             enabled_cogs = i
 
+    update_available, update_data = await check_for_updates()
+    if update_available:
+        if config["auto_update"]:
+            print(Style.NORMAL + Fore.YELLOW + "[MCStatusBot] " + Fore.RESET + f"Update available! Auto-updating from {update_data['current_version']} to {update_data['latest_version']}...")
+            from update import download_and_install_update
+            if download_and_install_update(update_data):
+                print(Style.NORMAL + Fore.GREEN + "[MCStatusBot] " + Fore.RESET + "Auto-update successful! Please restart the bot to apply changes.")
+                sys.exit(42)
+            else:
+                print(Style.NORMAL + Fore.RED + "[MCStatusBot] " + Fore.RESET + "Auto-update failed. Please update manually.")
+        else:
+            print(Style.NORMAL + Fore.YELLOW + "[MCStatusBot] " + Fore.RESET + f"Update available! ({update_data['current_version']} → {update_data['latest_version']}) Run the *update command.")
 
+    with open('VERSION', 'r') as version_file:
+        version = version_file.read().strip()
+    
     print(Style.NORMAL + Fore.LIGHTMAGENTA_EX + "╔═══════════════════╗")
     print(Style.NORMAL + Fore.GREEN + "Name: " + Fore.RESET + Fore.RED + "MCStatusBot")
-    print(Style.NORMAL + Fore.GREEN + "Version: " + Fore.RESET + Fore.RED + "v1.3")
+    print(Style.NORMAL + Fore.GREEN + "Version: " + Fore.RESET + Fore.RED + version)
     print(Style.NORMAL + Fore.GREEN + "Refresh Time: " + Fore.RESET + Fore.RED + str(config["refresh_time"]) + " seconds")
     print(Style.NORMAL + Fore.GREEN + "Bot Status: " + Fore.RESET + Fore.RED + "Online")
     print(Style.NORMAL + Fore.GREEN + "Enabled Cogs: " + Fore.RESET + Fore.RED + str(enabled_cogs.replace('.py', '')))
     print(Style.NORMAL + Fore.GREEN + "Support: " + Fore.RESET + Fore.RED + "https://discord.superkali.me")
     print(Style.NORMAL + Fore.LIGHTMAGENTA_EX + "╚═══════════════════╝")
 
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(update_servers_status, "interval", seconds=config["refresh_time"])
+    scheduler.start()
+
+
+async def check_for_updates():
+    """Check for updates from GitHub repository"""
+    try:
+        with open('VERSION', 'r') as version_file:
+            current_version = version_file.read().strip()
+        
+        response = requests.get("https://api.github.com/repos/superkali/MCStatusBot/releases/latest")
+        if response.status_code == 200:
+            data = response.json()
+            latest_version = data["tag_name"]
+            
+            if latest_version != current_version:
+                return True, {
+                    "current_version": current_version,
+                    "latest_version": latest_version,
+                    "zipball_url": data["zipball_url"],
+                    "tag_name": latest_version
+                }
+    except Exception as e:
+        print(f"Error checking for updates: {e}")
+        return False, None
+        
+    return False, None
 
 
 async def update_servers_status():
@@ -144,10 +194,5 @@ async def send_console_status():
     print(Style.NORMAL + Fore.RED + "[MCStatusBot] " + Fore.RESET + Fore.CYAN + f"Current Status of Servers:")
     print(Style.NORMAL + Fore.RED + "[MCStatusBot] " + Fore.RESET + Fore.CYAN + f"{status.count(True)} Online servers")
     print(Style.NORMAL + Fore.RED + "[MCStatusBot] " + Fore.RESET + Fore.CYAN + f"{status.count(False)} Offline servers")
-
-scheduler = AsyncIOScheduler()
-scheduler.add_job(update_servers_status, "interval", seconds=config["refresh_time"])
-scheduler.start()
-
 
 client.run(bot_token)
