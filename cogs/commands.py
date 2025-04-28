@@ -98,4 +98,4 @@ class Commands(commands.Cog):
         await ctx.send(embed=embed)
 
 async def setup(client):
-   await client.add_cog(Commands(client))
+   client.add_cog(Commands(client))
